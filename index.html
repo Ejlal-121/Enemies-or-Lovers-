@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Match Maker</title>
+
+  <style>
+    /* ---------- PAGE ---------- */
+    body {
+      background: linear-gradient(#ffbfc3, #fdf3ec);
+      font-family: Georgia, serif;
+      text-align: center;
+      padding-top: 50px;
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    /* ---------- FLOATING HEARTS IN THE BACKGROUND ---------- */
+    .bg-heart {
+      position: fixed;
+      bottom: -50px;
+      font-size: 30px;
+      opacity: 0.5;
+      animation: float 8s linear infinite;
+    }
+
+    @keyframes float {
+      to {
+        transform: translateY(-110vh);
+      }
+    }
+
+    /* ---------- CARD ---------- */
+    .box {
+      position: relative;
+      background: white;
+      color: #830f37;
+      width: 340px;
+      margin: auto;
+      padding: 35px 30px;
+      border-radius: 30px;
+      border-top: 8px solid #ec6a85;
+      box-shadow: 0 15px 40px rgba(131, 15, 55, 0.3);
+    }
+
+    h1 {
+      margin: 0 0 5px 0;
+      font-size: 34px;
+    }
+
+    .subtitle {
+      color: #ec6a85;
+      margin-bottom: 20px;
+    }
+
+    /* ---------- INPUTS ---------- */
+    input {
+      width: 90%;
+      padding: 13px;
+      margin: 8px 0;
+      background: #fdf3ec;
+      color: #830f37;
+      border: 2px solid #ffbfc3;
+      border-radius: 15px;
+      text-align: center;
+      font-size: 16px;
+      outline: none;
+    }
+
+    /* Input glows when you click inside it */
+    input:focus {
+      border-color: #ec6a85;
+      box-shadow: 0 0 10px #ffbfc3;
+    }
+
+    /* ---------- BUTTON ---------- */
+    button {
+      width: 90%;
+      padding: 15px;
+      margin-top: 12px;
+      background: linear-gradient(#ec6a85, #830f37);
+      color: white;
+      border: none;
+      border-radius: 15px;
+      font-size: 18px;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(131, 15, 55, 0.4);
+    }
+
+    /* Button moves up when you hover over it */
+    button:hover {
+      transform: translateY(-3px);
+    }
+
+    /* Button gets smaller when you click it */
+    button:active {
+      transform: scale(0.9);
+    }
+
+    /* ---------- RESULT ---------- */
+    .pop {
+      animation: pop 0.6s;
+      margin-top: 20px;
+    }
+
+    @keyframes pop {
+      0% {
+        transform: scale(0);
+      }
+
+      70% {
+        transform: scale(1.2);
+      }
+
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    #score {
+      font-size: 55px;
+      font-weight: bold;
+      margin: 5px 0;
+    }
+
+    /* The bar that fills up */
+    .bar-background {
+      background: #fdf3ec;
+      height: 14px;
+      border-radius: 10px;
+      margin: 10px 0 15px 0;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #ffbfc3, #ec6a85, #830f37);
+      border-radius: 10px;
+      transition: width 1.5s;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Background hearts (each one has a different spot and speed) -->
+  <div class="bg-heart" style="left: 10%; animation-duration: 7s;">💗</div>
+  <div class="bg-heart" style="left: 30%; animation-duration: 10s;">💕</div>
+  <div class="bg-heart" style="left: 55%; animation-duration: 8s;">💖</div>
+  <div class="bg-heart" style="left: 75%; animation-duration: 11s;">💗</div>
+  <div class="bg-heart" style="left: 90%; animation-duration: 9s;">💕</div>
+
+  <div class="box">
+    <h1>Soulmate or Stranger? 🤔 💕</h1>
+    <p class="subtitle">Are you two meant to be?</p>
+
+    <input id="name1" placeholder="Your name">
+    <input id="name2" placeholder="Lover's name">
+    <button onclick="makeMatch()">Do the magic! 💘</button>
+
+    <!-- The result will appear here -->
+    <div id="result"></div>
+  </div>
+
+  <script>
+    function makeMatch() {
+      // 1. Get the names
+      var name1 = document.getElementById("name1").value.trim();
+      var name2 = document.getElementById("name2").value.trim();
+      var result = document.getElementById("result");
+
+      // 2. Check for empty names
+      if (name1 == "" || name2 == "") {
+        result.innerHTML = "<p>Please type both names 🙈</p>";
+        return;
+      }
+
+      // 3. Check for the same name
+      if (name1.toLowerCase() == name2.toLowerCase()) {
+        result.innerHTML = "<p>Matching with yourself?\nYou aren't that hopless..are you? 🥀 </p>";
+        return;
+      }
+
+      // 4. Make a random score from 0 to 100
+      var score = Math.floor(Math.random() * 101);
+
+      // 5. Choose a message and a color
+      var message = "";
+      var color = "";
+
+      if (score >= 70) {
+        message = "Cupid is jealous of your chemistry 🏹";
+        color = "#830f37";
+      } else if (score >= 35) {
+        message = "50/50 chance. Like pineapple on pizza 🍕";
+        color = "#ec6a85";
+      } else {
+        message = "Even Wi-Fi has a better connection than you two  🥀";
+        color = "#e8939b";
+      }
+
+      // 6. Show the result (the bar starts at 0 width)
+      result.innerHTML =
+        "<div class='pop'>" +
+        "<h3>" + name1 + " 💞 " + name2 + "</h3>" +
+        "<p id='score' style='color:" + color + "'>" + score + "%</p>" +
+        "<div class='bar-background'>" +
+        "<div class='bar-fill' id='bar' style='width:0%'></div>" +
+        "</div>" +
+        "<p>" + message + "</p>" +
+        "</div>";
+
+      // 7. Fill the bar after a tiny delay so it slides smoothly
+      setTimeout(function () {
+        document.getElementById("bar").style.width = score + "%";
+      }, 50);
+    }
+  </script>
+</body>
+
+</html>
